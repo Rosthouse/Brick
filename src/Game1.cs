@@ -103,25 +103,50 @@ namespace Brick
             base.Update(gameTime);
 
             this.ball.Update(this, gameTime);
+
+            this.rectangles.RemoveAll(brick => HandleCollision(ball, brick));
+        }
+
+        private bool HandleCollision(Ball ball, Rectangle brick)
+        {
+            var brickBounds = brick.Bounds;
             var ballBounds = ball.Bounds;
 
-            this.rectangles.RemoveAll(brick =>
+            if (brickBounds.Intersects(ballBounds))
             {
-                var brickBounds = brick.Bounds;
-                if (brickBounds.Intersects(ballBounds))
-                {
-                    ball.Reflect();
-                    rectangles.Remove(brick);
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            });
-            foreach (Rectangle brick in this.rectangles)
-            {
+                bool horizontal = false;
+                bool vertical = false;
 
+                if (ballBounds.Y <= brickBounds.Y - brickBounds.Height / 2)
+                {
+                    //Hit was from below the brick
+                    vertical = true;
+                }
+
+                if (ballBounds.Y >= brickBounds.Y + brickBounds.Height / 2)
+                {
+                    //Hit was from above the brick
+                    vertical = true;
+                }
+
+                if (ballBounds.X < brickBounds.X)
+                {
+                    //Hit was on left
+                    horizontal = true;
+                }
+
+                if (ballBounds.X > brickBounds.X)
+                {
+                    //Hit was on right
+                    horizontal = true;
+                }
+
+                ball.Reflect(horizontal, vertical);
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 

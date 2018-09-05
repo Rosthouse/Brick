@@ -52,9 +52,10 @@ namespace Brick
 
         }
 
-        internal void Reflect()
+        public void Reflect(bool horizontal, bool vertical)
         {
-            this.speed *= -1;
+            this.speed.X = horizontal ? this.speed.X *= -1 : this.speed.X;
+            this.speed.Y = vertical ? this.speed.Y *= -1 : this.speed.Y;
         }
     }
 }
