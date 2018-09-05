@@ -16,6 +16,7 @@ namespace Brick
         SpriteBatch spriteBatch;
         private List<Rectangle> rectangles;
         private Ball ball;
+        private Player player;
 
         public Game1()
         {
@@ -64,6 +65,13 @@ namespace Brick
 
             this.ball = new Ball(Vector2.Zero, Vector2.One * 10, Vector2.One * 5);
             this.ball.init(pixel);
+
+            var window = GraphicsDevice.Viewport.Bounds;
+
+            var playerSize = new Vector2(50, 20);
+            var playerPosition = new Vector2(window.Center.X - playerSize.X / 2, window.Bottom - 2 * playerSize.Y);
+            this.player = new Player(playerPosition, playerSize, 500);
+            this.player.init(pixel);
         }
 
         /// <summary>
@@ -103,10 +111,19 @@ namespace Brick
             base.Update(gameTime);
 
             this.ball.Update(this, gameTime);
+            this.player.Update(this, gameTime);
 
             this.rectangles.RemoveAll(brick => HandleCollision(ball, brick));
+            this.HandleCollision(ball, player);
         }
 
+
+        /// <summary>
+        /// Checks if the ball and a brick are intersecting with each other. If they do, this method will properly reflect the ball.
+        /// </summary>
+        /// <param name="ball">The ball of the game</param>
+        /// <param name="brick">A brick to check collision against</param>
+        /// <returns>True, if the ball and the brick are intersecting</returns>
         private bool HandleCollision(Ball ball, Rectangle brick)
         {
             var brickBounds = brick.Bounds;
@@ -167,6 +184,7 @@ namespace Brick
                 rectangle.Draw(spriteBatch);
             }
             this.ball.Draw(spriteBatch);
+            this.player.Draw(spriteBatch);
             this.spriteBatch.End();
 
             base.Draw(gameTime);
