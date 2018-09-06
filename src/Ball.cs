@@ -5,12 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoRect = Microsoft.Xna.Framework.Rectangle;
 
 namespace Brick
 {
     class Ball : Rectangle
     {
         private Vector2 speed;
+
+        public Vector2 Speed { get => speed; set => speed = value; }
 
         public Ball(Vector2 position, Vector2 size, Vector2 speed) : base(position, size)
         {
@@ -21,9 +24,9 @@ namespace Brick
         {
             base.Update(game, gameTime);
 
-            this.Position += this.speed;
+            this.Position += this.Speed;
 
-            var posRect = new Microsoft.Xna.Framework.Rectangle(this.Position.ToPoint(), this.Size.ToPoint());
+            var posRect = new MonoRect(this.Position.ToPoint(), this.Size.ToPoint());
             var window = game.GraphicsDevice.Viewport.Bounds;
 
             if (posRect.Top < window.Top)

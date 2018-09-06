@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 
 using PrimRect = Microsoft.Xna.Framework.Rectangle;
@@ -36,6 +37,9 @@ namespace Brick
 
             base.Initialize();
 
+
+            var window = GraphicsDevice.Viewport.Bounds;
+
             var offSet = new Vector2(20, 20);
             var size = new Vector2(20, 10);
             var margin = new Vector2(5, 5);
@@ -63,10 +67,9 @@ namespace Brick
                 currentPos.Y += size.Y + margin.Y;
             }
 
-            this.ball = new Ball(Vector2.Zero, Vector2.One * 10, Vector2.One * 5);
+            this.ball = new Ball(window.Center.ToVector2(), Vector2.One * 10, Vector2.One * 5);
             this.ball.init(pixel);
 
-            var window = GraphicsDevice.Viewport.Bounds;
 
             var playerSize = new Vector2(50, 20);
             var playerPosition = new Vector2(window.Center.X - playerSize.X / 2, window.Bottom - 2 * playerSize.Y);
@@ -114,7 +117,27 @@ namespace Brick
             this.player.Update(this, gameTime);
 
             this.rectangles.RemoveAll(brick => HandleCollision(ball, brick));
-            this.HandleCollision(ball, player);
+            this.HandlePlayerCollision(ball, player);
+        }
+
+        private void HandlePlayerCollision(Ball ball, Player player)
+        {
+            var ballBounds = ball.Bounds;
+            var playerBounds = player.Bounds;
+
+            if (playerBounds.Intersects(ballBounds))
+            {
+                var absoluteSpeed = new Vector2(Math.Abs(ball.Speed.X), Math.Abs(ball.Speed.Y));
+                if (ballBounds.Center.X < playerBounds.Center.X)
+                {
+                    ball.Speed = new Vector2(-1, -1) * absoluteSpeed;
+
+                }
+                else
+                {
+                    ball.Speed = new Vector2(1, -1) * absoluteSpeed;
+                }
+            }
         }
 
 
@@ -173,7 +196,7 @@ namespace Brick
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
 
