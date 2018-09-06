@@ -18,6 +18,7 @@ namespace Brick
         private List<Rectangle> rectangles;
         private Ball ball;
         private Player player;
+        private int score;
 
         public Game1()
         {
@@ -57,6 +58,13 @@ namespace Brick
             var playerPosition = new Vector2(window.Center.X - playerSize.X / 2, window.Bottom - 2 * playerSize.Y);
             this.player = new Player(playerPosition, playerSize, 500);
             this.player.init(pixel);
+
+            this.score = 0;
+        }
+
+        internal void Reset()
+        {
+            Initialize();
         }
 
         /// <summary>
@@ -175,6 +183,7 @@ namespace Brick
             {
                 bool horizontal = false;
                 bool vertical = false;
+                this.score++;
 
                 if (ballBounds.Y <= brickBounds.Y - brickBounds.Height / 2)
                 {

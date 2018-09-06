@@ -13,7 +13,7 @@ namespace Brick
             this.speed = speed;
         }
 
-        public override void Update(Game game, GameTime gameTime)
+        public override void Update(Game1 game, GameTime gameTime)
         {
             var inputState = Keyboard.GetState();
 

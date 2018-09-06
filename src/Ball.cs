@@ -20,7 +20,7 @@ namespace Brick
             this.speed = speed;
         }
 
-        public override void Update(Game game, GameTime gameTime)
+        public override void Update(Game1 game, GameTime gameTime)
         {
             base.Update(game, gameTime);
 
@@ -36,8 +36,9 @@ namespace Brick
             }
             if (posRect.Bottom > window.Bottom)
             {
-                this.Position = new Vector2(posRect.Left, window.Bottom - posRect.Height);
-                this.speed.Y *= -1;
+                game.Reset();
+                // this.Position = new Vector2(posRect.Left, window.Bottom - posRect.Height);
+                // this.speed.Y *= -1;
             }
 
             if (posRect.Left < window.Left)

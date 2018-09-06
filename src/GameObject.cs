@@ -19,7 +19,7 @@ namespace Brick
             this.position = position;
         }
 
-        public virtual void Update(Game game, GameTime gameTime) { }
+        public virtual void Update(Game1 game, GameTime gameTime) { }
         public virtual void Draw(SpriteBatch spriteBatch) { }
     }
 }
