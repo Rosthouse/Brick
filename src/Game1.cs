@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -20,6 +21,8 @@ namespace Brick
         private Ball ball;
         private Player player;
         private int score;
+        SoundEffect blip;
+        SoundEffect blop;
 
         public Game1()
         {
@@ -112,6 +115,8 @@ namespace Brick
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("Font");
+            blip = Content.Load<SoundEffect>("Blip_Select2");
+            blop = Content.Load<SoundEffect>("Blip_Select4");
         }
 
         /// <summary>
@@ -157,6 +162,7 @@ namespace Brick
             if (playerBounds.Intersects(ballBounds))
             {
                 var absoluteSpeed = new Vector2(Math.Abs(ball.Speed.X), Math.Abs(ball.Speed.Y));
+                blop.Play();
                 if (ballBounds.Center.X < playerBounds.Center.X)
                 {
                     ball.Speed = new Vector2(-1, -1) * absoluteSpeed;
@@ -186,6 +192,7 @@ namespace Brick
                 bool horizontal = false;
                 bool vertical = false;
                 this.score++;
+                blip.Play();
 
                 if (ballBounds.Y <= brickBounds.Y - brickBounds.Height / 2)
                 {
@@ -241,8 +248,6 @@ namespace Brick
             this.ball.Draw(spriteBatch);
 
             this.player.Draw(spriteBatch);
-
-
 
             this.spriteBatch.End();
 
