@@ -45,7 +45,7 @@ namespace Brick
             var pixel = new Texture2D(GraphicsDevice, 1, 1);
             pixel.SetData(new Color[] { Color.White });
 
-            var brickBounds = window.Scale(0.9f, 0.5f);
+            var brickBounds = window.Scale(0.9f, 0.3f);
             brickBounds.Offset(window.Width * offSet.X, window.Height * offSet.Y);
             this.rectangles = InitializeBricks(brickBounds, size, margin, pixel);
 
