@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Brick
+namespace Brick.Windows
 {
     public static class Program
     {

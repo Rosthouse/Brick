@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>4ae79730-f29d-457c-8ee1-e4d67008fa6e</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Ball.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Player.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rectangle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RectangleExtensions.cs" />
+  </ItemGroup>
+</Project>
