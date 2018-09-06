@@ -3,8 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-
-using PrimRect = Microsoft.Xna.Framework.Rectangle;
+using System.Diagnostics;
+using MonoRect = Microsoft.Xna.Framework.Rectangle;
 
 namespace Brick
 {
@@ -33,39 +33,21 @@ namespace Brick
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
-
 
             var window = GraphicsDevice.Viewport.Bounds;
 
-            var offSet = new Vector2(20, 20);
+            var offSet = new Vector2(0.05f, 0.05f);
             var size = new Vector2(20, 10);
             var margin = new Vector2(5, 5);
-
-            this.rectangles = new List<Rectangle>();
 
 
             var pixel = new Texture2D(GraphicsDevice, 1, 1);
             pixel.SetData(new Color[] { Color.White });
 
-
-            Vector2 currentPos = offSet;
-
-            for (int y = 0; y < 5; y++)
-            {
-                for (int x = 0; x < 10; x++)
-                {
-                    var rectangle = new Rectangle(currentPos, size);
-                    rectangle.init(pixel);
-                    this.rectangles.Add(rectangle);
-
-                    currentPos.X += size.X + margin.X;
-                }
-                currentPos.X = offSet.X;
-                currentPos.Y += size.Y + margin.Y;
-            }
+            var brickBounds = window.Scale(0.9f, 0.5f);
+            brickBounds.Offset(window.Width * offSet.X, window.Height * offSet.Y);
+            this.rectangles = InitializeBricks(brickBounds, size, margin, pixel);
 
             this.ball = new Ball(window.Center.ToVector2(), Vector2.One * 10, Vector2.One * 5);
             this.ball.init(pixel);
@@ -78,16 +60,48 @@ namespace Brick
         }
 
         /// <summary>
+        /// Generates a grid of <see cref="Rectangle">Rectangles</see>.
+        /// </summary>
+        /// <param name="bounds">Bricks will be generated inside this rectangle</param>
+        /// <param name="rectangleSize">The size for each individual rectangle</param>
+        /// <param name="margin">The margin between each brick</param>
+        /// <param name="pixel">A <see cref="Texture2D"> defining a single pixel</param>
+        /// <returns></returns>
+        private List<Rectangle> InitializeBricks(MonoRect bounds, Vector2 rectangleSize, Vector2 margin, Texture2D pixel)
+        {
+            Debug.Assert(bounds.Contains(new MonoRect(bounds.Location, rectangleSize.ToPoint())));
+
+            var rectangles = new List<Rectangle>();
+
+            Vector2 currentPos = bounds.Location.ToVector2();
+
+            int rows = (int)Math.Round(bounds.Height / (rectangleSize.Y + margin.Y));
+            int columns = (int)Math.Round(bounds.Width / (rectangleSize.X + margin.X));
+
+            for (int y = 0; y < rows; y++)
+            {
+                for (int x = 0; x < columns; x++)
+                {
+                    var rectangle = new Rectangle(currentPos, rectangleSize);
+                    rectangle.init(pixel);
+                    rectangles.Add(rectangle);
+
+                    currentPos.X += rectangleSize.X + margin.X;
+                }
+                currentPos.X = bounds.X;
+                currentPos.Y += rectangleSize.Y + margin.Y;
+            }
+
+            return rectangles;
+        }
+
+        /// <summary>
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
-
         }
 
         /// <summary>
@@ -96,7 +110,6 @@ namespace Brick
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
         }
 
         /// <summary>
@@ -109,8 +122,6 @@ namespace Brick
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
-
             base.Update(gameTime);
 
             this.ball.Update(this, gameTime);
@@ -120,6 +131,14 @@ namespace Brick
             this.HandlePlayerCollision(ball, player);
         }
 
+        /// <summary>
+        /// Handles the collision between the ball and the player. 
+        /// </summary>
+        /// <remark>
+        /// This logic is a bit different from a collision with a brick, since the ball is always reflected upwards.
+        /// </remark>
+        /// <param name="ball">The <see cref="Ball"> to reflect.</param>
+        /// <param name="player">The <see cref="Player"> to handle collision against.</param>
         private void HandlePlayerCollision(Ball ball, Player player)
         {
             var ballBounds = ball.Bounds;
@@ -197,8 +216,6 @@ namespace Brick
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-
-            // TODO: Add your drawing code here
 
             this.spriteBatch.Begin();
 
