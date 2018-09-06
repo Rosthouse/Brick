@@ -15,6 +15,7 @@ namespace Brick
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        private SpriteFont font;
         private List<Rectangle> rectangles;
         private Ball ball;
         private Player player;
@@ -110,6 +111,7 @@ namespace Brick
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            font = Content.Load<SpriteFont>("Font");
         }
 
         /// <summary>
@@ -228,12 +230,20 @@ namespace Brick
 
             this.spriteBatch.Begin();
 
+            var scorePosition = GraphicsDevice.Viewport.Bounds.Center.ToVector2();
+            scorePosition.Y += scorePosition.Y / 2;
+            this.spriteBatch.DrawString(this.font, score.ToString(), scorePosition, Color.White);
+
             foreach (Rectangle rectangle in this.rectangles)
             {
                 rectangle.Draw(spriteBatch);
             }
             this.ball.Draw(spriteBatch);
+
             this.player.Draw(spriteBatch);
+
+
+
             this.spriteBatch.End();
 
             base.Draw(gameTime);
